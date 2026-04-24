@@ -134,16 +134,15 @@ export function AttentionSection() {
 
   // Compute heatmap
   useEffect(() => {
-    if (!pixels) {
-      setHeatmap(null);
-      return;
-    }
+    if (!pixels) return;
+
+    let cancelled = false;
 
     if (source === "sample" && sourceDigit !== undefined) {
-      // Load pre-computed Grad-CAM
       fetch("/build_a_brain_assets/samples/gradcams.json")
         .then((r) => r.json())
         .then((data) => {
+          if (cancelled) return;
           const gcData = data[String(sourceDigit)] as number[][];
           const flat = new Float32Array(28 * 28);
           for (let y = 0; y < 28; y++) {
@@ -155,26 +154,32 @@ export function AttentionSection() {
           setIsGradCam(true);
         });
     } else if (session && isReady) {
-      // Compute activation-based proxy
       runInference(session, pixels).then((result) => {
+        if (cancelled) return;
         const h = computeActivationHeatmap(result.conv2);
         setHeatmap(h);
         setIsGradCam(false);
       });
     }
+
+    return () => {
+      cancelled = true;
+    };
   }, [pixels, source, sourceDigit, session, isReady]);
+
+  const effectiveHeatmap = pixels ? heatmap : null;
 
   // Render canvases
   useEffect(() => {
     if (!pixels || !inputCanvasRef.current || !overlayCanvasRef.current) return;
-    renderOverlay(inputCanvasRef.current, pixels, heatmap ?? new Float32Array(784), false);
+    renderOverlay(inputCanvasRef.current, pixels, effectiveHeatmap ?? new Float32Array(784), false);
     renderOverlay(
       overlayCanvasRef.current,
       pixels,
-      heatmap ?? new Float32Array(784),
+      effectiveHeatmap ?? new Float32Array(784),
       showHeatmap
     );
-  }, [pixels, heatmap, showHeatmap]);
+  }, [pixels, effectiveHeatmap, showHeatmap]);
 
   return (
     <Section id="attention" wide>
@@ -186,33 +191,32 @@ export function AttentionSection() {
 
       <Prose>
         <p>
-          Your brain doesn&rsquo;t have the bandwidth to fully process
-          everything hitting your retina. In 1964, Anne Treisman proposed
-          the <em>filter attenuation model</em>, which argues that unattended
-          information isn&rsquo;t completely blocked — it&rsquo;s just turned
-          down, like lowering the volume on a background conversation. The
-          important signals get amplified; the rest are attenuated but not
-          silenced.
+          Attention is your brain&rsquo;s way of being selective about what it
+          actually perceives. It doesn&rsquo;t have the bandwidth to process
+          everything, so it chooses wisely. In 1964, Anne Treisman proposed
+          the <em>filter attenuation model</em>, which claims that unattended
+          information isn&rsquo;t actually completely ignored — it&rsquo;s
+          just slightly tuned out.
         </p>
         <p>
-          A CNN learns something strikingly similar during training. Each
-          weight in the network represents how much attention that neuron pays
-          to a particular feature. For parts of the input that matter — the
-          curves that distinguish a &ldquo;3&rdquo; from an &ldquo;8,&rdquo;
-          say — the network learns large weight values, amplifying those
-          signals. For parts that don&rsquo;t matter, the weights stay small,
-          effectively attenuating that information. This is Treisman&rsquo;s
-          filter, implemented in linear algebra.
+          A CNN learns to do something very similar during training. For parts
+          of the input that aren&rsquo;t important, the model learns small
+          weight values that don&rsquo;t have much impact on the final result.
+          For features that are important — like the curves that separate a 3
+          from an 8 — it learns larger weights, giving those features more
+          influence on the output. That&rsquo;s Treisman&rsquo;s filter,
+          implemented in linear algebra.
         </p>
         <p>
-          We can visualize this using a technique called Grad-CAM, which asks
-          the network: &ldquo;if this pixel had been different, how much would
-          the answer have changed?&rdquo; The resulting heatmap is a{" "}
-          <em>spotlight of attention</em> — it reveals which regions of the
-          input the network weighted most heavily for its decision. Toggle
-          the overlay below and notice how the hot spots cluster around the
-          most diagnostic features of the digit, not the empty background.
-          The model learned what to care about and what to ignore.
+          The heatmap below shows which regions of the input the network
+          weighted most heavily. It was calculated beforehand using a
+          technique called Grad-CAM, which basically asks how much changing
+          each pixel would change the output. This is a visual analog for
+          Treisman&rsquo;s filter attenuation and the spotlight of attention.
+          Toggle the overlay and notice that the model isn&rsquo;t just
+          memorizing specific pixel locations — it&rsquo;s actually learning
+          what combination of features makes up each digit, and ignoring the
+          rest.
         </p>
       </Prose>
 
@@ -259,10 +263,11 @@ export function AttentionSection() {
                 {showHeatmap ? "Hide attention" : "Show attention"}
               </Button>
 
-              {!isGradCam && heatmap && (
+              {!isGradCam && effectiveHeatmap && (
                 <p className="max-w-sm text-center text-xs italic text-[var(--fg-muted)]">
-                  For drawn digits, we show activation intensity as a proxy;
-                  true Grad-CAM requires gradient computation.
+                  For drawn digits, this shows activation intensity as a stand
+                  in. Real Grad-CAM needs gradient calculations that ONNX
+                  can&rsquo;t do in the browser.
                 </p>
               )}
             </div>

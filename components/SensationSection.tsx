@@ -18,24 +18,22 @@ export function SensationSection() {
 
       <Prose>
         <p>
-          Before you can recognize a face, read a word, or catch a ball,
-          something much simpler has to happen. Photons strike the
-          photoreceptors in your retina — rods and cones — and a process
-          called <em>transduction</em> converts that physical energy into
-          electrical signals. This is <em>sensation</em>: the raw conversion
-          of stimuli into neural activity, with no interpretation attached. A
-          &ldquo;7&rdquo; at this stage is just a pattern of firing rates
-          traveling down the optic nerve. There is no number, no meaning, no
-          recognition. Only data.
+          Sensation is the process of receiving signals from the outside world
+          and converting them into electrical signals inside the brain. When
+          you look at a handwritten 7, photons hit the rods and cones in your
+          retina, and a process called <em>transduction</em> turns that
+          physical energy into electrical signals. At this stage there is no
+          recognition yet. No meaning. Only data.
         </p>
         <p>
-          A convolutional neural network begins with the same step. Before it
-          can do anything intelligent, an image must be transduced into
-          numbers. A 28-by-28 pixel grid becomes 784 intensity values between
-          0 (black) and 1 (white) — the network&rsquo;s equivalent of
-          electrical impulses leaving the retina. Try drawing a digit below,
-          or pick one of the samples. Notice that the pixels themselves are
-          meaningless — a grid of grays. Meaning comes later.
+          A convolutional neural network starts the exact same way. Before it
+          can do anything useful, the image has to be reduced to numbers. A
+          28x28 pixel grid becomes 784 greyscale intensity values between 0
+          (black) and 1 (white). This mirrors exactly how the retina converts
+          photons into electrical signals. The numbers by themselves mean
+          nothing. It&rsquo;s just raw input. Try drawing a digit below, or
+          pick one of the samples, and you&rsquo;ll see the grid of greys that
+          the model actually sees.
         </p>
       </Prose>
 

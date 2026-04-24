@@ -7,39 +7,35 @@ export function TakeawaySection() {
     <Section id="takeaway">
       <SectionHeader
         eyebrow="Synthesis"
-        title="What the machine teaches us about the mind"
+        title="Wrapping it up"
       />
 
       <Prose>
         <p>
-          Sensation, perception, and attention are not just three vocabulary
-          words on a midterm. They represent a deep architectural insight about
-          how information-processing systems — biological or artificial — must
-          be organized. Sensation is transduction: the cheap, mechanical
-          conversion of energy into signal. Perception is construction: the
-          expensive, hierarchical extraction of features that Hubel and Wiesel
-          found in the visual cortex and that convolutional layers replicate
-          with remarkable fidelity. And attention is selection: the mechanism
-          that separates a system that works in a quiet lab from one that works
-          in the messy, noisy world.
+          Overall, my project shows how modern machine learning techniques,
+          like neural networks, were inspired heavily by how the brain works.
+          This CNN learns to sense through pixel input, perceives those raw
+          signals through layers of neurons, and then filters what&rsquo;s
+          important and what isn&rsquo;t through the training process. It
+          learns to pay attention to only the important features.
         </p>
         <p>
-          This CNN learns to sense through pixel input, perceives through
-          layers of artificial neurons whose weights parallel synaptic
-          strengths, and filters what matters through its training process —
-          amplifying important features and attenuating irrelevant ones, much
-          as Treisman&rsquo;s filter attenuation model describes. Yet without
-          a dedicated attention module, it crumbles in the face of
-          distractions, just as a human who cannot deploy selective attention
-          would be overwhelmed by the jumbled sensory world.
+          While this works pretty effectively on clean inputs, without a
+          dedicated attention module it struggles badly with distractions —
+          the same way a human who couldn&rsquo;t deploy attention would
+          struggle to process all the jumbled meaningless information hitting
+          their senses. Newer models have specific attention modules built-in
+          that help them understand more context about what they&rsquo;re
+          looking at, which is a huge part of why they work so well on
+          real-world images.
         </p>
         <p>
-          The parallels between brains and neural networks are not accidental.
-          Hubel and Wiesel&rsquo;s simple and complex cells became
-          convolutional filters. Treisman&rsquo;s feature binding became
-          self-attention. The engineering validated the psychology, and the
-          psychology continues to guide the engineering. Understanding one
-          helps you understand the other.
+          Seeing the CNN and the brain side by side makes it really clear that
+          the parallels aren&rsquo;t coincidental. Hubel and Wiesel&rsquo;s
+          simple and complex cells became convolutional filters.
+          Treisman&rsquo;s ideas about attention became attention modules. The
+          engineering grew directly out of the psychology, and understanding
+          one helps you understand the other.
         </p>
       </Prose>
     </Section>

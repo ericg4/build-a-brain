@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { Section } from "@/components/layout/Section";
 import { SectionHeader } from "@/components/layout/SectionHeader";
 import { Prose } from "@/components/layout/Prose";
@@ -21,15 +21,20 @@ export function PerceptionSection() {
   const [, startTransition] = useTransition();
 
   useEffect(() => {
-    if (!pixels || !session || !isReady) {
-      setResult(null);
-      return;
-    }
+    if (!pixels || !session || !isReady) return;
 
+    let cancelled = false;
     startTransition(() => {
-      runInference(session, pixels).then(setResult);
+      runInference(session, pixels).then((r) => {
+        if (!cancelled) setResult(r);
+      });
     });
+    return () => {
+      cancelled = true;
+    };
   }, [pixels, session, isReady]);
+
+  const displayResult = pixels ? result : null;
 
   return (
     <Section id="perception" wide>
@@ -41,36 +46,32 @@ export function PerceptionSection() {
 
       <Prose>
         <p>
-          The retina sends its raw signals to the visual cortex, where something
-          remarkable happens. In 1959, David Hubel and Torsten Wiesel stuck
-          electrodes into the visual cortex of a cat and discovered that
-          individual neurons fired selectively — some only for horizontal edges,
-          some only for vertical ones, some only for edges moving in a
-          particular direction. Their work, which won the 1981 Nobel Prize,
-          revealed that the brain builds up visual understanding in layers:
-          simple cells in V1 detect edges, complex cells in V2 and V4 combine
-          those edges into shapes, and neurons in the inferotemporal cortex
-          respond to whole objects.
+          Perception is the process of constructing meaning from the raw
+          electrical signals that sensation produces. In 1959, Hubel and
+          Wiesel put electrodes into the visual cortex of a cat and found that
+          individual neurons fired selectively. Some only responded to
+          horizontal edges, some only to vertical ones, and some only to edges
+          moving in a specific direction. Their work showed that the brain
+          builds up visual understanding in layers: simple cells in V1 detect
+          edges, complex cells in V2 and V4 combine those edges into shapes,
+          and neurons further down the pipeline respond to whole objects.
         </p>
         <p>
-          This is <em>perception</em> — the active construction of meaning from
-          raw sensation. A convolutional neural network mirrors this hierarchy
-          with striking fidelity. Just as a biological neuron sums its inputs,
-          each weighted by synaptic strength, and fires when the total exceeds
-          a threshold, an artificial neuron multiplies each input by a learned
-          weight and passes the sum through an activation function. When you
-          draw a &ldquo;7,&rdquo; a different set of neurons fires than when
-          you draw a &ldquo;3&rdquo; — exactly as in the brain, where distinct
-          populations of neurons respond to distinct stimuli.
+          A CNN builds perception the same way. It&rsquo;s made up of layers
+          of artificial neurons, and each neuron processes its inputs with
+          certain weights. When a handwritten 7 is inputted, it fires a
+          different set of neurons at different strengths than if a
+          handwritten 3 were inputted. This mirrors exactly how human brain
+          neurons work.
         </p>
         <p>
           The diagram below maps each stage of the CNN onto its biological
-          counterpart. The first convolutional layer&rsquo;s eight neurons play
-          the role of V1 simple cells, each detecting a specific edge or
-          stroke. The second layer&rsquo;s sixteen neurons combine those
-          features into richer patterns, much as V2 and V4 complex cells do.
-          The final dense layer pools all of this evidence into a single
-          classification — the network&rsquo;s conscious percept, if you will.
+          counterpart. The first convolutional layer&rsquo;s eight neurons act
+          like V1 simple cells, each learning to detect a simple feature like
+          an edge or a stroke. The second layer&rsquo;s sixteen neurons
+          combine those features into more complex patterns, similar to what
+          V2 and V4 cells do. The final dense layer pools everything into the
+          model&rsquo;s best guess at what it perceived.
         </p>
       </Prose>
 
@@ -80,11 +81,11 @@ export function PerceptionSection() {
 
       <Prose>
         <p>
-          What you see in each tile below is literally what that neuron
-          &ldquo;cares about&rdquo; — bright regions mean the neuron is firing
-          strongly for that part of the image. Try different inputs and watch
-          the patterns shift. This is roughly analogous to the way neurons in
-          your V1 cortex respond to the stimuli in front of you right now.
+          Each tile below shows what a single neuron is actually looking at.
+          Bright regions mean the neuron is firing strongly for that part of
+          the image. Try different inputs and watch the patterns change. This
+          is roughly what neurons in your own V1 cortex are doing right now as
+          you read this.
         </p>
       </Prose>
 
@@ -103,8 +104,8 @@ export function PerceptionSection() {
           </div>
           <div className="w-full max-w-[240px]">
             <PredictionBars
-              probs={result?.probs ?? null}
-              prediction={result?.prediction ?? null}
+              probs={displayResult?.probs ?? null}
+              prediction={displayResult?.prediction ?? null}
             />
           </div>
         </div>
@@ -122,7 +123,7 @@ export function PerceptionSection() {
 
           {/* Conv1 */}
           <FeatureMapGrid
-            data={result?.conv1 ?? null}
+            data={displayResult?.conv1 ?? null}
             channels={8}
             size={28}
             cols={4}
@@ -132,7 +133,7 @@ export function PerceptionSection() {
 
           {/* Conv2 */}
           <FeatureMapGrid
-            data={result?.conv2 ?? null}
+            data={displayResult?.conv2 ?? null}
             channels={16}
             size={14}
             cols={4}
@@ -146,24 +147,26 @@ export function PerceptionSection() {
 }
 
 function InputPreview({ pixels }: { pixels: Float32Array }) {
-  const canvasRef = { current: null as HTMLCanvasElement | null };
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const el = canvasRef.current;
+    if (!el) return;
+    const ctx = el.getContext("2d")!;
+    const imageData = ctx.createImageData(28, 28);
+    for (let i = 0; i < 784; i++) {
+      const v = Math.round(pixels[i] * 255);
+      imageData.data[i * 4] = v;
+      imageData.data[i * 4 + 1] = v;
+      imageData.data[i * 4 + 2] = v;
+      imageData.data[i * 4 + 3] = 255;
+    }
+    ctx.putImageData(imageData, 0, 0);
+  }, [pixels]);
 
   return (
     <canvas
-      ref={(el) => {
-        if (!el) return;
-        canvasRef.current = el;
-        const ctx = el.getContext("2d")!;
-        const imageData = ctx.createImageData(28, 28);
-        for (let i = 0; i < 784; i++) {
-          const v = Math.round(pixels[i] * 255);
-          imageData.data[i * 4] = v;
-          imageData.data[i * 4 + 1] = v;
-          imageData.data[i * 4 + 2] = v;
-          imageData.data[i * 4 + 3] = 255;
-        }
-        ctx.putImageData(imageData, 0, 0);
-      }}
+      ref={canvasRef}
       width={28}
       height={28}
       className="h-full w-full"

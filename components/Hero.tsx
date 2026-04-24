@@ -30,8 +30,8 @@ export function Hero() {
         transition={{ duration: 0.6, delay: 0.2 }}
         className="mt-6 max-w-lg text-xl leading-relaxed text-[var(--fg-muted)]"
       >
-        A journey through sensation, perception, and attention — explained with
-        a neural network you can play with.
+        Exploring sensation, perception, and attention through a neural
+        network you can actually play with.
       </motion.p>
 
       <motion.p
