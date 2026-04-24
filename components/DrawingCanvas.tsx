@@ -83,6 +83,15 @@ export function DrawingCanvas() {
     ctx.moveTo(pos.x, pos.y);
   };
 
+  const emitDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const emitPixelsDebounced = useCallback(() => {
+    if (emitDebounceRef.current) clearTimeout(emitDebounceRef.current);
+    emitDebounceRef.current = setTimeout(() => {
+      emitPixels();
+    }, 50);
+  }, [emitPixels]);
+
   const draw = (e: React.MouseEvent | React.TouchEvent) => {
     if (!isDrawingRef.current) return;
     const ctx = getCtx();
@@ -94,11 +103,13 @@ export function DrawingCanvas() {
     ctx.lineJoin = "round";
     ctx.lineTo(pos.x, pos.y);
     ctx.stroke();
+    emitPixelsDebounced();
   };
 
   const endDraw = () => {
     if (isDrawingRef.current) {
       isDrawingRef.current = false;
+      if (emitDebounceRef.current) clearTimeout(emitDebounceRef.current);
       emitPixels();
     }
   };

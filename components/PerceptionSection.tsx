@@ -6,6 +6,8 @@ import { SectionHeader } from "@/components/layout/SectionHeader";
 import { Prose } from "@/components/layout/Prose";
 import { FeatureMapGrid } from "@/components/FeatureMapGrid";
 import { PredictionBars } from "@/components/PredictionBars";
+import { DrawingCanvas } from "@/components/DrawingCanvas";
+import { SamplePicker } from "@/components/SamplePicker";
 import { useInput } from "@/lib/InputContext";
 import { useModel } from "@/hooks/useModel";
 import { runInference } from "@/lib/inference";
@@ -68,12 +70,27 @@ export function PerceptionSection() {
 
       <div className="mt-14">
         {!pixels && (
-          <p className="text-center text-[var(--fg-muted)]">
+          <p className="mb-8 text-center text-[var(--fg-muted)]">
             Draw or select a digit above to see the network in action.
           </p>
         )}
 
-        <div className="grid items-start gap-8 md:grid-cols-[1fr_1.2fr_1.5fr_1fr]">
+        {/* Drawing + predictions side by side */}
+        <div className="mb-10 flex flex-col items-center gap-8 md:flex-row md:justify-center md:items-start">
+          <div className="flex flex-col items-center gap-4">
+            <DrawingCanvas />
+            <SamplePicker />
+          </div>
+          <div className="w-full max-w-[240px]">
+            <PredictionBars
+              probs={result?.probs ?? null}
+              prediction={result?.prediction ?? null}
+            />
+          </div>
+        </div>
+
+        {/* Feature maps */}
+        <div className="grid items-start gap-8 md:grid-cols-[1fr_1fr_1.5fr]">
           {/* Input preview */}
           <div className="text-center">
             <p className="mb-2 text-sm font-medium text-[var(--fg)]">Input</p>
@@ -101,12 +118,6 @@ export function PerceptionSection() {
             cols={4}
             label="Second layer"
             sublabel="Combinations"
-          />
-
-          {/* Predictions */}
-          <PredictionBars
-            probs={result?.probs ?? null}
-            prediction={result?.prediction ?? null}
           />
         </div>
       </div>
