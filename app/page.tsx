@@ -1,5 +1,6 @@
 import { Hero } from "@/components/Hero";
 import { SensationSection } from "@/components/SensationSection";
+import { PerceptionSection } from "@/components/PerceptionSection";
 import { InputProvider } from "@/lib/InputContext";
 
 export default function Home() {
@@ -8,6 +9,7 @@ export default function Home() {
       <main>
         <Hero />
         <SensationSection />
+        <PerceptionSection />
       </main>
     </InputProvider>
   );
