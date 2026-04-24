@@ -1,0 +1,42 @@
+[
+  {
+    "digit": 0,
+    "path": "digit_0.png"
+  },
+  {
+    "digit": 1,
+    "path": "digit_1.png"
+  },
+  {
+    "digit": 2,
+    "path": "digit_2.png"
+  },
+  {
+    "digit": 3,
+    "path": "digit_3.png"
+  },
+  {
+    "digit": 4,
+    "path": "digit_4.png"
+  },
+  {
+    "digit": 5,
+    "path": "digit_5.png"
+  },
+  {
+    "digit": 6,
+    "path": "digit_6.png"
+  },
+  {
+    "digit": 7,
+    "path": "digit_7.png"
+  },
+  {
+    "digit": 8,
+    "path": "digit_8.png"
+  },
+  {
+    "digit": 9,
+    "path": "digit_9.png"
+  }
+]
