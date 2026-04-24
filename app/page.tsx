@@ -5,6 +5,7 @@ import { AttentionSection } from "@/components/AttentionSection";
 import { DistractorSection } from "@/components/DistractorSection";
 import { TakeawaySection } from "@/components/TakeawaySection";
 import { ReferencesSection } from "@/components/ReferencesSection";
+import { ModelStatus } from "@/components/ModelStatus";
 import { InputProvider } from "@/lib/InputContext";
 
 export default function Home() {
@@ -19,6 +20,7 @@ export default function Home() {
         <TakeawaySection />
         <ReferencesSection />
       </main>
+      <ModelStatus />
     </InputProvider>
   );
 }
