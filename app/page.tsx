@@ -2,6 +2,9 @@ import { Hero } from "@/components/Hero";
 import { SensationSection } from "@/components/SensationSection";
 import { PerceptionSection } from "@/components/PerceptionSection";
 import { AttentionSection } from "@/components/AttentionSection";
+import { DistractorSection } from "@/components/DistractorSection";
+import { TakeawaySection } from "@/components/TakeawaySection";
+import { ReferencesSection } from "@/components/ReferencesSection";
 import { InputProvider } from "@/lib/InputContext";
 
 export default function Home() {
@@ -12,6 +15,9 @@ export default function Home() {
         <SensationSection />
         <PerceptionSection />
         <AttentionSection />
+        <DistractorSection />
+        <TakeawaySection />
+        <ReferencesSection />
       </main>
     </InputProvider>
   );
