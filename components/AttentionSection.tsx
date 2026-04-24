@@ -186,23 +186,33 @@ export function AttentionSection() {
 
       <Prose>
         <p>
-          We can ask a harder question: out of all those pixels, which ones
-          actually <em>mattered</em> for the network&rsquo;s decision?
-          There&rsquo;s a technique called Grad-CAM that answers this by asking
-          the network, in effect, &ldquo;if this pixel had been different, how
-          much would the answer have changed?&rdquo; The result is a heatmap
-          showing where the network looked.
+          Your brain doesn&rsquo;t have the bandwidth to fully process
+          everything hitting your retina. In 1964, Anne Treisman proposed
+          the <em>filter attenuation model</em>, which argues that unattended
+          information isn&rsquo;t completely blocked — it&rsquo;s just turned
+          down, like lowering the volume on a background conversation. The
+          important signals get amplified; the rest are attenuated but not
+          silenced.
         </p>
         <p>
-          This is not quite the same as human attention. Cognitive psychologists
-          distinguish <em>endogenous</em> attention — the voluntary,
-          goal-directed spotlight you cast on this sentence — from{" "}
-          <em>exogenous</em> attention, the reflexive capture that happens when
-          something flashes in the corner of your eye. Grad-CAM resembles
-          neither exactly; it is more like a forensic reconstruction of what the
-          network found salient. But it points at the same underlying question:
-          perception is selective, and to understand a system — brain or
-          machine — we have to ask what it chose to care about.
+          A CNN learns something strikingly similar during training. Each
+          weight in the network represents how much attention that neuron pays
+          to a particular feature. For parts of the input that matter — the
+          curves that distinguish a &ldquo;3&rdquo; from an &ldquo;8,&rdquo;
+          say — the network learns large weight values, amplifying those
+          signals. For parts that don&rsquo;t matter, the weights stay small,
+          effectively attenuating that information. This is Treisman&rsquo;s
+          filter, implemented in linear algebra.
+        </p>
+        <p>
+          We can visualize this using a technique called Grad-CAM, which asks
+          the network: &ldquo;if this pixel had been different, how much would
+          the answer have changed?&rdquo; The resulting heatmap is a{" "}
+          <em>spotlight of attention</em> — it reveals which regions of the
+          input the network weighted most heavily for its decision. Toggle
+          the overlay below and notice how the hot spots cluster around the
+          most diagnostic features of the digit, not the empty background.
+          The model learned what to care about and what to ignore.
         </p>
       </Prose>
 

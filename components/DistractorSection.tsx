@@ -190,30 +190,34 @@ export function DistractorSection() {
 
       <Prose>
         <p>
-          In 1980, Anne Treisman proposed Feature Integration Theory, which
-          argues that attention is the glue that binds features into objects.
-          Without it, a simple system can still detect basic features — color,
-          orientation, motion — but it cannot reliably combine them, and it is
-          overwhelmed when distractors crowd the scene. Look for a single red
-          circle among green circles and the red one pops out preattentively.
-          Look for a red circle among red squares and green circles, and you
-          have to search, deploying attention serially.
+          In 1980, Anne Treisman proposed Feature Integration Theory, arguing
+          that attention is the glue that binds features into objects. Without
+          it, a system can detect basic features — color, orientation, motion —
+          but it cannot reliably combine them when distractors crowd the scene.
+          Think of it this way: our CNN processes every pixel with roughly
+          equal priority before its learned weights filter out what&rsquo;s
+          unimportant. It has no mechanism to proactively suppress noise the
+          way your attentional system does.
         </p>
         <p>
-          Our CNN has no attention mechanism. It processes the entire image at
-          once, with no way to suppress irrelevant regions. The prediction below
-          shows what happens when we inject increasing amounts of noise,
-          occlusion, or clutter into the input. Accuracy holds up for a while,
-          then collapses. This is what preattentive processing looks like when
-          it meets the real, messy world.
+          The demo below shows what happens when selective attention is absent.
+          Drag the slider to inject noise, occlusion, or salt-and-pepper
+          clutter into the input. Accuracy holds up for a while — the learned
+          weights can tolerate mild distortion — but it collapses quickly.
+          Even mediocre levels of distraction cause the model to fail, often
+          predicting the same digit regardless of the actual input. This is
+          exactly why selective attention matters for perception: without the
+          ability to ignore irrelevant information, the system breaks down.
         </p>
         <p>
-          More sophisticated vision models — Vision Transformers, for instance —
-          use explicit attention mechanisms that learn to weight different parts
-          of the input. In a meaningful sense, the engineering caught up with the
+          Modern vision models like Vision Transformers include dedicated{" "}
+          <em>attention modules</em> that learn to weight different parts of
+          the input dynamically. These modules help the model understand
+          context — which features belong together and which are background
+          noise. In a meaningful sense, the engineering caught up with the
           psychology: once researchers built systems with something like
-          Treisman&rsquo;s binding mechanism, performance on cluttered real-world
-          images improved dramatically.
+          Treisman&rsquo;s binding mechanism, performance on cluttered
+          real-world images improved dramatically.
         </p>
       </Prose>
 

@@ -8,6 +8,7 @@ import { FeatureMapGrid } from "@/components/FeatureMapGrid";
 import { PredictionBars } from "@/components/PredictionBars";
 import { DrawingCanvas } from "@/components/DrawingCanvas";
 import { SamplePicker } from "@/components/SamplePicker";
+import { BrainCNNParallel } from "@/components/BrainCNNParallel";
 import { useInput } from "@/lib/InputContext";
 import { useModel } from "@/hooks/useModel";
 import { runInference } from "@/lib/inference";
@@ -47,24 +48,43 @@ export function PerceptionSection() {
           some only for vertical ones, some only for edges moving in a
           particular direction. Their work, which won the 1981 Nobel Prize,
           revealed that the brain builds up visual understanding in layers:
-          simple features first, then combinations of features, then whole
-          objects.
+          simple cells in V1 detect edges, complex cells in V2 and V4 combine
+          those edges into shapes, and neurons in the inferotemporal cortex
+          respond to whole objects.
         </p>
         <p>
           This is <em>perception</em> — the active construction of meaning from
-          raw sensation. A convolutional neural network works the same way. The
-          first layer below contains eight &ldquo;neurons,&rdquo; each looking
-          for a specific simple pattern. Some learn to detect edges, others
-          respond to curves or blobs. The second layer combines these detections
-          into richer patterns. By the time the signal reaches the end, the
-          network has assembled enough evidence to guess a digit.
+          raw sensation. A convolutional neural network mirrors this hierarchy
+          with striking fidelity. Just as a biological neuron sums its inputs,
+          each weighted by synaptic strength, and fires when the total exceeds
+          a threshold, an artificial neuron multiplies each input by a learned
+          weight and passes the sum through an activation function. When you
+          draw a &ldquo;7,&rdquo; a different set of neurons fires than when
+          you draw a &ldquo;3&rdquo; — exactly as in the brain, where distinct
+          populations of neurons respond to distinct stimuli.
         </p>
         <p>
-          What you see in each tile is literally what that neuron &ldquo;cares
-          about&rdquo; — bright regions mean the neuron is firing strongly for
-          that part of the image. Try different inputs and watch the patterns
-          shift. This is roughly analogous to the way neurons in your V1 cortex
-          respond to the stimuli in front of you right now.
+          The diagram below maps each stage of the CNN onto its biological
+          counterpart. The first convolutional layer&rsquo;s eight neurons play
+          the role of V1 simple cells, each detecting a specific edge or
+          stroke. The second layer&rsquo;s sixteen neurons combine those
+          features into richer patterns, much as V2 and V4 complex cells do.
+          The final dense layer pools all of this evidence into a single
+          classification — the network&rsquo;s conscious percept, if you will.
+        </p>
+      </Prose>
+
+      <div className="mt-10 mb-4">
+        <BrainCNNParallel />
+      </div>
+
+      <Prose>
+        <p>
+          What you see in each tile below is literally what that neuron
+          &ldquo;cares about&rdquo; — bright regions mean the neuron is firing
+          strongly for that part of the image. Try different inputs and watch
+          the patterns shift. This is roughly analogous to the way neurons in
+          your V1 cortex respond to the stimuli in front of you right now.
         </p>
       </Prose>
 
